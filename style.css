@@ -180,6 +180,9 @@ body {
 }
 
 /* FOOTER */
+/* ... (rest of the CSS remains unchanged) */
+
+/* FOOTER */
 .footer {
   text-align: center;
   padding: 20px;
@@ -188,6 +191,12 @@ body {
   background: white;
   border-top: 1px solid #eee;
 }
+
+.footer p {
+  margin: 5px 0; /* Added for better spacing between copyright and address */
+}
+
+/* ... (rest of the CSS remains unchanged) */
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
