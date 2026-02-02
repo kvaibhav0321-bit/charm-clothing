@@ -135,7 +135,7 @@ document.getElementById("cartBtn").addEventListener("click", () => {
 document.getElementById("checkoutBtn").addEventListener("click", () => {
   if (cart.length === 0) return alert("Cart is empty!");
   const message = cart.map(item => `${item.name} - ₹${item.price}`).join(", ");
-  window.open(`https://wa.me/917972226093?text=Order: ${message}. Pay via GPay: +917972226093`, "_blank"); // Updated number
+  window.open(`https://wa.me/917972226093?text=Order: ${message}. Pay via GPay: +917972226093`, "_blank"); // Corrected number
 });
 
 document.getElementById("clearCartBtn").addEventListener("click", () => {
