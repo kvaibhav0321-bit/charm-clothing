@@ -24,18 +24,23 @@ fetch(URL)
     renderProducts(allProducts);
   })
   .catch(err => {
-    document.getElementById("products").innerHTML = "<h2>Error loading products.</h2>";
+    document.getElementById("products").innerHTML = "<h2 style='color:#4A90E2;'>Error loading products. Please refresh.</h2>";
+    console.error(err);
   });
 
 // Render products
 function renderProducts(products) {
   const container = document.getElementById("products");
   container.innerHTML = "";
+  if (products.length === 0) {
+    container.innerHTML = "<p style='text-align:center;'>No products found.</p>";
+    return;
+  }
   products.forEach(item => {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <img src="${item.image || 'https://via.placeholder.com/280x250'}" alt="${item.name}" loading="lazy" />
+      <img src="${item.image || 'https://via.placeholder.com/280x250/E3F2FD/4A90E2?text=No+Image'}" alt="${item.name}" loading="lazy" />
       <div class="card-body">
         <h3>${item.name}</h3>
         <span class="category-tag">${item.category || 'Uncategorized'}</span>
@@ -43,7 +48,9 @@ function renderProducts(products) {
         <button class="add-to-cart" data-id="${item.name}">Add to Cart</button>
       </div>
     `;
-    card.addEventListener("click", () => openModal(item));
+    card.addEventListener("click", (e) => {
+      if (!e.target.classList.contains("add-to-cart")) openModal(item); // Avoid modal on button click
+    });
     container.appendChild(card);
   });
   updateCartCount();
@@ -52,15 +59,15 @@ function renderProducts(products) {
 // Search
 document.getElementById("searchBar").addEventListener("input", (e) => {
   const query = e.target.value.toLowerCase();
-  const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query));
+  const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query)));
   renderProducts(filtered);
 });
 
 // Sort
 document.getElementById("sortSelect").addEventListener("change", (e) => {
   let sorted = [...allProducts];
-  if (e.target.value === "price-low") sorted.sort((a,b) => a.price - b.price);
-  else if (e.target.value === "price-high") sorted.sort((a,b) => b.price - a.price);
+  if (e.target.value === "price-low") sorted.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+  else if (e.target.value === "price-high") sorted.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
   renderProducts(sorted);
 });
 
@@ -68,9 +75,9 @@ document.getElementById("sortSelect").addEventListener("change", (e) => {
 function openModal(item) {
   const modal = document.getElementById("productModal");
   document.getElementById("modalDetails").innerHTML = `
-    <img src="${item.image || 'https://via.placeholder.com/400x300'}" alt="${item.name}" />
+    <img src="${item.image || 'https://via.placeholder.com/400x300/E3F2FD/4A90E2?text=No+Image'}" alt="${item.name}" />
     <h3>${item.name}</h3>
-    <p>${item.description}</p>
+    <p>${item.description || 'No description.'}</p>
     <p>Sizes: ${item.sizes || 'S, M, L, XL'}</p>
     <p class="price">₹${item.price}</p>
     <button class="add-to-cart" data-id="${item.name}">Add to Cart</button>
@@ -86,23 +93,37 @@ document.querySelectorAll(".close").forEach(close => close.addEventListener("cli
 // Cart
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("add-to-cart")) {
+    e.stopPropagation(); // Prevent card click
     const id = e.target.dataset.id;
     const product = allProducts.find(p => p.name === id);
-    cart.push(product);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
+    if (product) {
+      cart.push(product);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      alert("Added to cart!"); // Quick feedback
+    }
   }
 });
 
 document.getElementById("cartBtn").addEventListener("click", () => {
   const modal = document.getElementById("cartModal");
-  document.getElementById("cartItems").innerHTML = cart.map(item => `<p>${item.name} - ₹${item.price}</p>`).join("");
+  document.getElementById("cartItems").innerHTML = cart.length ? cart.map((item, index) => `<p>${index + 1}. ${item.name} - ₹${item.price}</p>`).join("") : "<p>Cart is empty.</p>";
+  document.getElementById("totalItems").textContent = cart.length;
   modal.style.display = "block";
 });
 
 document.getElementById("checkoutBtn").addEventListener("click", () => {
+  if (cart.length === 0) return alert("Cart is empty!");
   const message = cart.map(item => `${item.name} - ₹${item.price}`).join(", ");
-  window.open(`https://wa.me/1234567890?text=Order: ${message}`, "_blank");
+  window.open(`https://wa.me/1234567890?text=Order: ${message}. Pay via GPay: +917972226093`, "_blank");
+});
+
+document.getElementById("clearCartBtn").addEventListener("click", () => {
+  cart = [];
+  localStorage.removeItem('cart');
+  updateCartCount();
+  document.getElementById("cartModal").style.display = "none";
+  alert("Cart cleared!");
 });
 
 function updateCartCount() {
@@ -110,5 +131,11 @@ function updateCartCount() {
 }
 
 function filterProducts(category) {
-  // Same as before
+  currentFilter = category;
+  document.querySelectorAll(".category-btn").forEach(btn => {
+    btn.classList.remove("active");
+    if (btn.textContent === category) btn.classList.add("active");
+  });
+  const filtered = category === "All" ? allProducts : allProducts.filter(item => item.category === category);
+  renderProducts(filtered);
 }
