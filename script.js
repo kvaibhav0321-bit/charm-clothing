@@ -11,16 +11,32 @@ categories.forEach(cat => {
   const btn = document.createElement("button");
   btn.className = "category-btn";
   btn.textContent = cat;
-  btn.addEventListener("click", () => filterProducts(cat));
+  btn.addEventListener("click", () => {
+    console.log(`Filtering to: ${cat}`); // Debug log
+    filterProducts(cat);
+  });
   if (cat === "All") btn.classList.add("active");
   categoryFilter.appendChild(btn);
 });
+
+// Add Reset Filters button
+const resetBtn = document.createElement("button");
+resetBtn.className = "category-btn";
+resetBtn.textContent = "Reset Filters";
+resetBtn.addEventListener("click", () => {
+  document.getElementById("searchBar").value = "";
+  document.getElementById("sortSelect").value = "default";
+  filterProducts("All");
+  renderProducts(allProducts);
+});
+categoryFilter.appendChild(resetBtn);
 
 // Fetch products
 fetch(URL)
   .then(res => res.json())
   .then(data => {
     allProducts = data.filter(item => item.name);
+    console.log("Products loaded:", allProducts.length); // Debug log
     renderProducts(allProducts);
   })
   .catch(err => {
@@ -33,7 +49,7 @@ function renderProducts(products) {
   const container = document.getElementById("products");
   container.innerHTML = "";
   if (products.length === 0) {
-    container.innerHTML = "<p style='text-align:center;'>No products found.</p>";
+    container.innerHTML = "<p style='text-align:center; color:#4A90E2;'>No products found in this category. Try 'Reset Filters'.</p>";
     return;
   }
   products.forEach(item => {
@@ -49,7 +65,7 @@ function renderProducts(products) {
       </div>
     `;
     card.addEventListener("click", (e) => {
-      if (!e.target.classList.contains("add-to-cart")) openModal(item); // Avoid modal on button click
+      if (!e.target.classList.contains("add-to-cart")) openModal(item);
     });
     container.appendChild(card);
   });
@@ -60,6 +76,7 @@ function renderProducts(products) {
 document.getElementById("searchBar").addEventListener("input", (e) => {
   const query = e.target.value.toLowerCase();
   const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query)));
+  console.log(`Search results: ${filtered.length} for "${query}"`); // Debug log
   renderProducts(filtered);
 });
 
@@ -68,6 +85,7 @@ document.getElementById("sortSelect").addEventListener("change", (e) => {
   let sorted = [...allProducts];
   if (e.target.value === "price-low") sorted.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
   else if (e.target.value === "price-high") sorted.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+  console.log(`Sorted by: ${e.target.value}`); // Debug log
   renderProducts(sorted);
 });
 
@@ -93,14 +111,16 @@ document.querySelectorAll(".close").forEach(close => close.addEventListener("cli
 // Cart
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("add-to-cart")) {
-    e.stopPropagation(); // Prevent card click
+    e.stopPropagation();
     const id = e.target.dataset.id;
     const product = allProducts.find(p => p.name === id);
     if (product) {
       cart.push(product);
       localStorage.setItem('cart', JSON.stringify(cart));
       updateCartCount();
-      alert("Added to cart!"); // Quick feedback
+      alert("Added to cart!");
+    } else {
+      alert("Product not found!");
     }
   }
 });
@@ -115,7 +135,7 @@ document.getElementById("cartBtn").addEventListener("click", () => {
 document.getElementById("checkoutBtn").addEventListener("click", () => {
   if (cart.length === 0) return alert("Cart is empty!");
   const message = cart.map(item => `${item.name} - ₹${item.price}`).join(", ");
-  window.open(`https://wa.me/1234567890?text=Order: ${message}. Pay via GPay: +917972226093`, "_blank");
+  window.open(`https://wa.me/917972226093?text=Order: ${message}. Pay via GPay: +917972226093`, "_blank"); // Updated number
 });
 
 document.getElementById("clearCartBtn").addEventListener("click", () => {
@@ -137,5 +157,6 @@ function filterProducts(category) {
     if (btn.textContent === category) btn.classList.add("active");
   });
   const filtered = category === "All" ? allProducts : allProducts.filter(item => item.category === category);
+  console.log(`Filtered to ${category}: ${filtered.length} products`); // Debug log
   renderProducts(filtered);
 }
