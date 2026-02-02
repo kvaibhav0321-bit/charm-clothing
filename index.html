@@ -3,28 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Discover elegant women's fashion at Charm Clothing. Shop ethnic, western, and more with fast delivery." />
   <title>Charm Clothing – Women Collection</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="https://via.placeholder.com/32x32/ff5f9e/ffffff?text=CC" /> <!-- Placeholder logo/favicon -->
 </head>
 <body>
 
 <header class="header">
-  <h1>Charm Clothing</h1>
+  <div class="logo">
+    <img src="https://via.placeholder.com/50x50/ff5f9e/ffffff?text=CC" alt="Charm Clothing Logo" />
+    <h1>Charm Clothing</h1>
+  </div>
   <p>Elegant Women’s Fashion</p>
+  <div class="header-actions">
+    <input type="text" id="searchBar" placeholder="Search products..." />
+    <button id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+  </div>
 </header>
 
 <section class="category-bar" id="categoryFilter">
   <!-- Categories injected by JS -->
 </section>
 
+<section class="filters">
+  <select id="sortSelect">
+    <option value="default">Sort by: Default</option>
+    <option value="price-low">Price: Low to High</option>
+    <option value="price-high">Price: High to Low</option>
+  </select>
+</section>
+
 <section class="products" id="products">
   <div class="loading">Loading products...</div>
+</section>
+
+<!-- Product Detail Modal -->
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="modalDetails"></div>
+  </div>
+</div>
+
+<!-- Cart Modal -->
+<div id="cartModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <button id="checkoutBtn">Checkout via WhatsApp</button>
+  </div>
+</div>
+
+<section class="testimonials">
+  <h2>What Our Customers Say</h2>
+  <div class="testimonial">
+    <p>"Amazing quality and fast delivery!" - Priya S.</p>
+  </div>
+  <div class="testimonial">
+    <p>"Love the ethnic collection!" - Anjali M.</p>
+  </div>
 </section>
 
 <footer class="footer">
   <p>© 2023 Charm Clothing | Women Collection</p>
   <p><strong>Visit Us:</strong> In front of Dinesh Footwear, Custom Brand Outlet, Gandhi Path West, Jaipur, Rajasthan</p>
+  <div class="social-links">
+    <a href="https://instagram.com/charmclothing" target="_blank">Instagram</a> |
+    <a href="https://facebook.com/charmclothing" target="_blank">Facebook</a>
+  </div>
+  <form class="newsletter">
+    <input type="email" placeholder="Subscribe for updates" />
+    <button type="submit">Subscribe</button>
+  </form>
 </footer>
 
 <script src="script.js"></script>
