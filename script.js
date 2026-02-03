@@ -1,4 +1,4 @@
-const URL = "https://opensheet.elk.sh/1rZl8CqkD83b2IS2zJY6ieS_3VhZEZ-fBALFMrluTuKc/Sheet1";
+const URL = "https://script.google.com/macros/s/AKfycbwncw-2atQ4nosp-z79DCbRtYguJnOQslPcR9zir1T3Z0uy0NxUFXZnIG2vfwCpoa_x/exec";
 
 const categories = ["All", "Ethnic Wear", "Western Wear", "Innerwear & Loungewear", "Bottom Wear", "Seasonal Wear", "Party & Occasion Wear", "Accessories"];
 let allProducts = [];
