@@ -63,6 +63,8 @@ function renderProducts(products) {
         <h3>${item.name}</h3>
         <span class="category-tag">${item.category || 'Uncategorized'}</span>
         <p class="price">₹${item.price}</p>
+        <p class="desc">${item.description || 'No description.'}</p>
+        ${item.product_code ? `<p class="product-code">Code: ${item.product_code}</p>` : ''}  <!-- Added product_code display -->
         <button class="add-to-cart" data-id="${item.name}">Add to Cart</button>
       </div>
     `;
@@ -101,6 +103,7 @@ function openModal(item) {
     <p>${item.description || 'No description.'}</p>
     <p>Sizes: ${item.sizes || 'S, M, L, XL'}</p>
     <p class="price">₹${item.price}</p>
+    ${item.product_code ? `<p>Code: ${item.product_code}</p>` : ''}
     <button class="add-to-cart" data-id="${item.name}">Add to Cart</button>
   `;
   modal.style.display = "block";
