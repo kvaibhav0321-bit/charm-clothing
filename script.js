@@ -53,18 +53,17 @@ function renderProducts(products) {
     return;
   }
   products.forEach(item => {
-    // Updated: Prepend GitHub raw URL for relative paths
-    const imageSrc = item.image ? (item.image.startsWith('http') ? item.image : `https://raw.githubusercontent.com/kvaibhav0321-bit/charm-clothing/main/${item.image}`) : 'https://via.placeholder.com/280x250/E3F2FD/4A90E2?text=No+Image';
+    const imageSrc = item.image ? `https://raw.githubusercontent.com/kvaibhav0321-bit/charm-clothing/main/${item.image}` : 'https://via.placeholder.com/280x250/E3F2FD/4A90E2?text=No+Image';
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <img src="${imageSrc}" alt="${item.name}" loading="lazy" />
+      <img src="${imageSrc}" alt="${item.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/280x250/E3F2FD/4A90E2?text=No+Image'" />
       <div class="card-body">
         <h3>${item.name}</h3>
         <span class="category-tag">${item.category || 'Uncategorized'}</span>
         <p class="price">₹${item.price}</p>
         <p class="desc">${item.description || 'No description.'}</p>
-        ${item.product_code ? `<p class="product-code">Code: ${item.product_code}</p>` : ''}  <!-- Added product_code display -->
+        ${item.product_code ? `<p class="product-code">Code: ${item.product_code}</p>` : ''}
         <button class="add-to-cart" data-id="${item.name}">Add to Cart</button>
       </div>
     `;
