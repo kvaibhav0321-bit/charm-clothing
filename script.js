@@ -57,7 +57,7 @@ function renderProducts(products) {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <img src="${imageSrc}" alt="${item.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/280x250/E3F2FD/4A90E2?text=No+Image'" />
+      <img src="${imageSrc}" alt="${item.name}" loading="lazy" onerror="console.log('Image failed to load: ${imageSrc}'); this.src='https://via.placeholder.com/280x250/E3F2FD/4A90E2?text=No+Image'" />
       <div class="card-body">
         <h3>${item.name}</h3>
         <span class="category-tag">${item.category || 'Uncategorized'}</span>
@@ -95,7 +95,7 @@ document.getElementById("sortSelect").addEventListener("change", (e) => {
 // Modal
 function openModal(item) {
   const modal = document.getElementById("productModal");
-  const imageSrc = item.image ? (item.image.startsWith('http') ? item.image : `https://raw.githubusercontent.com/kvaibhav0321-bit/charm-clothing/main/${item.image}`) : 'https://via.placeholder.com/400x300/E3F2FD/4A90E2?text=No+Image';
+  const imageSrc = item.image ? `https://raw.githubusercontent.com/kvaibhav0321-bit/charm-clothing/main/${item.image}` : 'https://via.placeholder.com/400x300/E3F2FD/4A90E2?text=No+Image';
   document.getElementById("modalDetails").innerHTML = `
     <img src="${imageSrc}" alt="${item.name}" />
     <h3>${item.name}</h3>
